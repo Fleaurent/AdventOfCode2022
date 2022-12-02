@@ -13,12 +13,12 @@ $ pip install -r requirements.txt
 
 ## 2. Stats
 
-My Advent of Code 2022 Python 3.11.0 Solutions  
+My Advent of Code 2022 Python 3.10.8 Solutions  
 
 | Day | Part 1 | Part 2 |
 |-----|--------|--------|
 | 1   |   *    |   *    |
-| 2   |        |        |
+| 2   |   *    |   *    |
 | 3   |        |        |
 | 4   |        |        |
 | 5   |        |        |
