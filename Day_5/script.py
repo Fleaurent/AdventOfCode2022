@@ -40,7 +40,7 @@ def parse_stack(stack_str: list[str]) -> list:
                 # print(f"{i}: {item_i}")
 
     return stack
-´
+
 
 def part_1(stack_str: list, commands_str: list) -> int:
     """ 
