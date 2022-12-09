@@ -27,94 +27,96 @@ def get_input(filepath: Path) -> list:
 
 
 class Rope:
-    def __init__(self) -> None:
-        self.head = (0, 0)
-        self.tail = (0, 0)
+    def __init__(self, n_elements) -> None:
+        self.n_elements = n_elements
+        self.knots = [(0, 0) for _ in range(n_elements)]
         self.trail = defaultdict(int)
 
     def move_rope(self, command: str) -> None:
         self._update_head(command)
-        self._update_tail()
+        self._update_knots()
 
     def _update_head(self, command: str) -> None:
         match command:
             case 'R':
-                x_new = self.head[0] + 1
-                y_new = self.head[1]
+                x_new = self.knots[0][0] + 1
+                y_new = self.knots[0][1]
             case 'L':
-                x_new = self.head[0] - 1
-                y_new = self.head[1]
+                x_new = self.knots[0][0] - 1
+                y_new = self.knots[0][1]
             case 'U':
-                x_new = self.head[0]
-                y_new = self.head[1] + 1
+                x_new = self.knots[0][0]
+                y_new = self.knots[0][1] + 1
             case 'D':
-                x_new = self.head[0]
-                y_new = self.head[1] - 1
+                x_new = self.knots[0][0]
+                y_new = self.knots[0][1] - 1
 
-        self.head = (x_new, y_new)
+        self.knots[0] = (x_new, y_new)
 
-    def _update_tail(self):
-        x_tail = self.tail[0]
-        y_tail = self.tail[1]
-        x_head = self.head[0]
-        y_head = self.head[1]
+    def _update_knots(self):
+        for i in range(0, self.n_elements-1):
+            x_back  = self.knots[i+1][0]
+            y_back  = self.knots[i+1][1]
+            x_front = self.knots[i][0]
+            y_front = self.knots[i][1]
 
-        x_diff = x_head - x_tail
-        y_diff = y_head - y_tail
+            x_diff = x_front - x_back
+            y_diff = y_front - y_back
 
-        if(abs(x_diff) <= 1 and abs(y_diff) <= 1):
-            # a) tail is touching head:
-            pass
-        elif(y_head == y_tail):
-            # b) horizontal
-            if x_diff > 1:
-                # -> move tail right
-                x_tail += 1
+            if(abs(x_diff) <= 1 and abs(y_diff) <= 1):
+                # a) back is touching front:
+                pass
+            elif(y_front == y_back):
+                # b) horizontal
+                if x_diff > 1:
+                    # -> move knots right
+                    x_back += 1
+                else:
+                    # -> move knots left
+                    x_back -= 1
+            elif (x_front == x_back):
+                # c) vertical
+                if y_diff > 1:
+                    # -> move knots up
+                    y_back += 1
+                else:
+                    # -> move knots down
+                    y_back -= 1
             else:
-                # -> move tail left
-                x_tail -= 1
-        elif (x_head == x_tail):
-            # c) vertical
-            if y_diff > 1:
-                # -> move tail up
-                y_tail += 1
-            else:
-                # -> move tail down
-                y_tail -= 1
-        else:
-            # c) diagonal
-            if x_diff > 0 and y_diff > 0:
-                # -> move tail right and up
-                x_tail += 1
-                y_tail += 1
-            elif x_diff > 0 and y_diff < 0:
-                # -> move tail right and down
-                x_tail += 1
-                y_tail -= 1
-            elif x_diff < 0 and y_diff > 0:
-                # -> move tail left and up
-                x_tail -= 1
-                y_tail += 1
-            elif x_diff < 0 and y_diff < 0:
-                # -> move tail left and up
-                x_tail -= 1
-                y_tail -= 1
+                # c) diagonal
+                if x_diff > 0 and y_diff > 0:
+                    # -> move knots right and up
+                    x_back += 1
+                    y_back += 1
+                elif x_diff > 0 and y_diff < 0:
+                    # -> move knots right and down
+                    x_back += 1
+                    y_back -= 1
+                elif x_diff < 0 and y_diff > 0:
+                    # -> move knots left and up
+                    x_back -= 1
+                    y_back += 1
+                elif x_diff < 0 and y_diff < 0:
+                    # -> move knots left and up
+                    x_back -= 1
+                    y_back -= 1
 
-        # update tail
-        self.tail = (x_tail, y_tail)
+            # update knots
+            self.knots[i+1] = (x_back, y_back)
 
         # save trail of tail
         # a) dict: only map if visited or not
         # self.trail[self.tail] = 1
         # b) defaultdict: init new key with 0 by default
-        self.trail[self.tail] += 1
-
+        self.trail[self.knots[-1]] += 1
 
 def part_1(data: list) -> int:
     """ 
-    find number of visibles trees from outside the grid
+    move rope with 2 knots i.e. only head and 1 knot = tail
+    follow trail of the tail
+    return number of visited coordinates
     """
-    rope = Rope()
+    rope = Rope(n_elements=2)
 
     for command in data:
         rope.move_rope(command)
@@ -125,12 +127,18 @@ def part_1(data: list) -> int:
 
 def part_2(data: list) -> int:
     """ 
-    find tree with highest scenic score
-    i.e. multiply viewing distances in each direction
+    move rope with 10 knots i.e. head and 9 knots
+    follow trail of the tail
+    return number of visited coordinates
     """
+    rope = Rope(n_elements=10)
 
-    
-    return 0
+    for command in data:
+        rope.move_rope(command)
+        # print(f"{command}: {rope.tail} -> {rope.head}")
+
+    return len(rope.trail)
+
 
 if __name__ == '__main__':
     print(INPUT_FILE)
@@ -146,5 +154,5 @@ if __name__ == '__main__':
     print(part_1(data))
 
     # Part 2
-    # print(part_2(example_data))
-    # print(part_2(data))
+    print(part_2(example_data))
+    print(part_2(data))
