@@ -1,8 +1,6 @@
 from __future__ import annotations  # problem: use custom class as typehint
 from pathlib import Path
 from collections import defaultdict
-import numpy as np
-import re
 
 
 PROJECT_DIR = Path(__file__).resolve().parents[1]
@@ -16,12 +14,9 @@ def get_input(filepath: Path) -> list:
     data = []
 
     with open(filepath, "r") as f:
-        # data.extend([int(letter) for letter in line.strip()] for line in f)
         for line in f:
-            parsed_line = re.search('\w \d+', line.strip())
-            direction   = parsed_line[0][0]
-            repetitions = int(parsed_line[0][2:])
-            data.extend(direction for _ in range(repetitions))
+            direction, repetitions = line.split()
+            data.extend(direction for _ in range(int(repetitions)))
 
     return data
 
@@ -55,10 +50,10 @@ class Rope:
 
     def _update_knots(self):
         for i in range(0, self.n_elements-1):
-            x_back  = self.knots[i+1][0]
-            y_back  = self.knots[i+1][1]
             x_front = self.knots[i][0]
             y_front = self.knots[i][1]
+            x_back  = self.knots[i+1][0]
+            y_back  = self.knots[i+1][1]
 
             x_diff = x_front - x_back
             y_diff = y_front - y_back
