@@ -10,7 +10,7 @@ EXAMPLE_INPUT_FILE = FILE_DIR / "example_input.txt"
 
 
 def get_input(filepath: Path) -> list:
-    """read input into 2d int array"""
+    """read input into char array"""
     data = []
 
     with open(filepath, "r") as f:

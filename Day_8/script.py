@@ -23,7 +23,7 @@ class TreeMap():
         return temp_str
         
 def get_input(filepath: Path) -> TreeMap:
-    """read input into 2d int array"""
+    """read input into TreeMap"""
     data = []
 
     with open(filepath, "r") as f:
