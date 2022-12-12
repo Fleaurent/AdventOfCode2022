@@ -116,7 +116,7 @@ def part_1(data: list[str]) -> int:
             height_neighbor = elevation_map[neighbor]
             if height_neighbor - height_temp <= 1:
                 temp_distance = distance_map[temp_point] + 1
-                if temp_distance <= distance_map[neighbor]:
+                if temp_distance < distance_map[neighbor]:
                     distance_map[neighbor] = temp_distance
                     queue.append(neighbor)
 
@@ -126,7 +126,7 @@ def part_1(data: list[str]) -> int:
             height_neighbor = elevation_map[neighbor]
             if height_neighbor - height_temp <= 1:
                 temp_distance = distance_map[temp_point] + 1
-                if temp_distance <= distance_map[neighbor]:
+                if temp_distance < distance_map[neighbor]:
                     distance_map[neighbor] = temp_distance
                     queue.append(neighbor)
         # up
@@ -135,7 +135,7 @@ def part_1(data: list[str]) -> int:
             height_neighbor = elevation_map[neighbor]
             if height_neighbor - height_temp <= 1:
                 temp_distance = distance_map[temp_point] + 1
-                if temp_distance <= distance_map[neighbor]:
+                if temp_distance < distance_map[neighbor]:
                     distance_map[neighbor] = temp_distance
                     queue.append(neighbor)
 
@@ -145,7 +145,7 @@ def part_1(data: list[str]) -> int:
             height_neighbor = elevation_map[neighbor]
             if height_neighbor - height_temp <= 1:
                 temp_distance = distance_map[temp_point] + 1
-                if temp_distance <= distance_map[neighbor]:
+                if temp_distance < distance_map[neighbor]:
                     distance_map[neighbor] = temp_distance
                     queue.append(neighbor)
 
